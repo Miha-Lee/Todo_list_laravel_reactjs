@@ -12,10 +12,10 @@ const SingleCard = ({ title, complete, deleteList, id, fetchTasks }) => {
 
   const updateTask = (id) => {
     const formData = new FormData();
-
     formData.append("_method", "PUT");
     formData.append("title", taskValue);
     formData.append("complete", taskComplete);
+
     api
       .post(`/tasks/${id}`, formData)
       .then(({ data }) => {
@@ -33,17 +33,20 @@ const SingleCard = ({ title, complete, deleteList, id, fetchTasks }) => {
   };
 
   const toggleTask = () => {
+    let completeNumber = 0;
     if (taskComplete === 0) {
       setTaskComplete(1);
+      completeNumber = 1;
     } else {
       setTaskComplete(0);
+      completeNumber = 0;
     }
 
     const formData = new FormData();
 
     formData.append("_method", "PUT");
     formData.append("title", taskValue);
-    formData.append("complete", taskComplete);
+    formData.append("complete", completeNumber);
 
     api
       .post(`/tasks/${id}`, formData)
@@ -63,7 +66,7 @@ const SingleCard = ({ title, complete, deleteList, id, fetchTasks }) => {
     <>
       <li
         className={`single-list justify-content-between ${
-          complete === 1 ? "completed" : ""
+          taskComplete === 1 ? "completed" : ""
         }`}
       >
         <div className="form-check paddingLeft0">
@@ -78,13 +81,11 @@ const SingleCard = ({ title, complete, deleteList, id, fetchTasks }) => {
           >
             Edit
           </Button>
-          {complete ? (
+          {taskComplete ? (
             <Button
               variant="success"
               className="leftSpace"
-              onClick={() => {
-                toggleTask();
-              }}
+              onClick={() => toggleTask()}
             >
               Completed
             </Button>
@@ -92,9 +93,7 @@ const SingleCard = ({ title, complete, deleteList, id, fetchTasks }) => {
             <Button
               variant="warning"
               className="leftSpace"
-              onClick={() => {
-                toggleTask();
-              }}
+              onClick={() => toggleTask()}
             >
               In Progress
             </Button>
